@@ -1,7 +1,7 @@
 package qa.company
 
 import com.typesafe.config.ConfigBeanFactory
-import org.junit.Assert
+import org.testng.Assert
 import org.testng.annotations.*
 import qa.company.config.PostgresDbConfig
 import qa.company.testcontainers.PostgresDbContainer
@@ -38,11 +38,17 @@ class DbPostgresTest : AbstractTest() {
 
     @Test
     fun checkPostgresDB() {
+
         val qaData = "qaData:${UUID.randomUUID()}"
+
         dbConnection.insertTestData(table, qaData)
         val selected = dbConnection.selectTestData(table)
+
         Assert.assertEquals(selected.size, 1)
-        Assert.assertEquals(selected[0].second, qaData+"asd")
+
+        val (actualId,actualData) = selected[0]
+        Assert.assertEquals(actualId, 1)
+        Assert.assertEquals(actualData, qaData)
     }
 
 
