@@ -1,6 +1,7 @@
 package qa.company
 
 import com.typesafe.config.ConfigBeanFactory
+import org.testcontainers.containers.output.Slf4jLogConsumer
 import org.testng.Assert
 import org.testng.annotations.*
 import qa.company.config.PostgresDbConfig
@@ -30,6 +31,7 @@ class DbPostgresTest : AbstractTest() {
     fun beforeMethod() {
         val jdbcUrl = "jdbc:postgresql://${postgresDbContainer.containerIpAddress}:${postgresDbContainer.getMappedPort(postgresDbConfig.internalPort)}/${postgresDbConfig.database}"
         dbConnection = DriverManager.getConnection(jdbcUrl, postgresDbConfig.user, postgresDbConfig.pass)
+        postgresDbContainer.followOutput(Slf4jLogConsumer(log))
     }
 
     @AfterMethod
